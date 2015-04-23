@@ -1,0 +1,325 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Site.master.cs" Inherits="SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - My ASP.NET Application</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Content/myStyleSheet.css" rel="stylesheet" type="text/css" runat="server" />
+    <link href="~/Content/font-awesome.css" rel="stylesheet" type="text/css" runat="server" />
+    <link href="~/Content/video-js/video-js.css" rel="stylesheet" runat="server" />
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server" EnablePageMethods="true">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see http://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Path="~/Content/video-js/video.js" />
+                <asp:ScriptReference Path="~/Scripts/jquery.signalR-2.2.0.min.js" />
+                <asp:ScriptReference Path="/signalr/hubs" />
+                <asp:ScriptReference Name="respond" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <%--<script src="~/Content/video-js/video.js" runat="server"></script>--%>
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" runat="server" href="~/">Application name</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a runat="server" href="~/">Home</a></li>
+                        <li><a runat="server" href="~/About">About</a></li>
+                        <li><a runat="server" href="~/Contact">Contact</a></li>
+                        <li>
+                            <div class="row input-group navbar-form">
+                                <asp:TextBox ID="SearchBox" CssClass="form-control" runat="server" placeholder="Search"></asp:TextBox>
+                                <%--<asp:Button ID="SearchButton" runat="server" Text="Search" OnClick="SearchButton_Click" />--%>
+                                <span id="SearchButton" class="input-group-btn" ><button class="btn btn-info" type="button" runat="server" onserverclick="SearchButton_ServerClick"><span class="glyphicon glyphicon-search"></span></button></span>
+                                <%-- <input type="button" class="btn btn-primary" runat="server" value="Search"/>
+                                    <a href="#" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>Search</a>--%>
+                            </div>
+                        </li>
+                    </ul>
+                    <asp:LoginView ID="LoginNav" runat="server" ViewStateMode="Disabled">
+                        <AnonymousTemplate>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a runat="server" href="~/Account/Register">Register</a></li>
+                                <li><a runat="server" href="~/Account/Login">Log in</a></li>
+                            </ul>
+                        </AnonymousTemplate>
+                        <LoggedInTemplate>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li>
+                                    <a tabindex="0" id="NotifAnch" title="Notifications" class="btn btn-lg tasks-menu" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus">
+                                        <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
+                                            <Triggers>
+                                                <asp:AsyncPostBackTrigger ControlID="BtnNotif" EventName="click" />
+                                                <asp:AsyncPostBackTrigger ControlID="UpdateNotif" EventName="click" />
+                                            </Triggers>
+                                            <ContentTemplate>
+                                                <asp:Label runat="server" ID="Notif_Span" class="glyphicon glyphicon-bell"></asp:Label>
+                                            </ContentTemplate>
+                                        </asp:UpdatePanel>
+                                    </a>
+                                    <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
+                                        <Triggers>
+                                                <asp:AsyncPostBackTrigger ControlID="UpdateNotif" EventName="click" />
+                                        </Triggers>
+                                        <ContentTemplate>
+                                            <div id="popover_content_wrapper" style="display: none">
+                                                <ul class="list-group" id="Notif_list" style="list-style: none">
+                                                    <asp:Repeater ID="NotifRepeater" runat="server" ClientIDMode="Static" EnableViewState="false">
+                                                        <ItemTemplate>
+                                                            <li class="list-group item">
+                                                                <a href='<%#Eval("UserId","~/Account/Channel?id={0}") %>'>
+                                                                    <div class="commenterImage">
+                                                                        <img src='<%#Eval("UserIco") %>' runat="server" />
+                                                                    </div>
+                                                                    <%#Eval("UserName") %></a>
+
+                                                                <a href='<%#Eval("Url")%>'><%#Eval("InterName") %> </a>
+                                                                <br />
+                                                                <span class="date sub-text"><%#Eval("InterDate") %></span>
+                                                                <hr />
+                                                            </li>
+                                                        </ItemTemplate>
+                                                    </asp:Repeater>
+                                                </ul>
+                                            </div>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+
+                                </li>
+                                <li><a runat="server" href="~/Account/Manage" title="Manage your account">Hello, <%: Context.User.Identity.GetUserName()  %>!</a></li>
+                                <li><a runat="server" href="Upload.aspx" title="Upload a video">Upload</a></li>
+                                <li>
+                                    <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Log off" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
+                                </li>
+                            </ul>
+
+
+                            <button runat="server" class="navbar-toggle" id="menu_button" onclick="Unnamed_Click">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </button>
+                        </LoggedInTemplate>
+                    </asp:LoginView>
+                </div>
+            </div>
+        </div>
+        <div id="Menu-container">
+            <button type="button" runat="server" id="btnRandom" class="btn btn-primary unselectable" data-toggle="collapse" data-target="#NavMenu">
+                <p><span class="glyphicon glyphicon-chevron-down"></span></p>
+            </button>
+            <asp:Panel ID="NavMenu" class="panel-collapse collapse in" runat="server" Visible="true">
+                <nav class="navbar navbar-default">
+                    <br>
+                    <ul class="nav">
+                    <li role="presentation"><a href="Default.aspx"><span class="btn-xs glyphicon glyphicon-home"></span>Most Recent</a></li>
+                    <li role="presentation"><a class="btn-lg" runat="server" data-toggle="collapse" data-target="#categ_container">
+                        <b>Categories</b>
+                    </a>
+                    <div class="panel-collapse collapse" id="categ_container">
+                        <ul id="categories_list" class="nav" runat="server">
+                        </ul>
+                        <br />
+                    </div></li>
+                        </ul>
+                    <asp:LoginView ID="LoginMenu" runat="server" ViewStateMode="Enabled">
+                        <LoggedInTemplate>
+                            <hr />
+                            <ul class="nav">
+                                <li role="presentation"><a href="~/Account/Channel?id=you" runat="server"><span class="btn-xs glyphicon glyphicon-user"></span>My channel</a></li>
+                                <li role="presentation"><a href="~/Feed/Subscription" runat="server"><span class="btn-xs glyphicon glyphicon-expand"></span>My Subscriptions</a></li>
+                                <li role="presentation"><a href="~/ManageSubscriptions" runat="server"><span class="btn-xs glyphicon glyphicon-cog"></span>Manage Subscriptions</a></li>
+                                <li role="presentation"><a href="~/Feed/Playlist?id=History" runat="server"><span class="btn-xs glyphicon glyphicon-calendar"></span>History</a></li>
+                                <li role="presentation"> <a href="~/Feed/Playlist?id=Liked" runat="server"><span class="btn-xs glyphicon glyphicon-thumbs-up"></span>Liked Videos</a></li>
+                                <hr />
+                                <li role="presentation"><a class="btn-lg" href="~/Account/Channel_lists?id=you" runat="server">
+                                    <b>Playlists</b>
+                                </a>
+                                <ul class="nav" runat="server">
+                                    <asp:Repeater ID="Playlist_repeater" runat="server">
+                                        <ItemTemplate>
+                                            <li>
+                                                <a runat="server" href='<%#Eval("Id","~/Feed/Playlist?id={0}") %>'><span class="btn-xs glyphicon glyphicon-list"></span><%#Eval("Title") %></a>
+                                            </li>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
+                                </ul>
+                                <br /></li>
+                            </ul>
+                        </LoggedInTemplate>
+                    </asp:LoginView>
+                </nav>
+            </asp:Panel>
+            <asp:Panel ID="AdminMenu" runat="server" Visible="false">
+                <nav class="navbar navbar-inverse">
+                    <br />
+                    <asp:Button ID="AdminDeleteUser" Text="Delete Current video" runat="server" Visible="false" OnClick="DeleteUser" />
+                    <asp:Button ID="AdminVidDelete" Text="Delete Current video" runat="server" Visible="false" OnClick="AdminDeleteVideo" />
+                </nav>
+            </asp:Panel>
+        </div>
+        <asp:UpdatePanel runat="server" ID="UpdatePanel2" UpdateMode="Conditional">
+            <ContentTemplate>
+                <asp:Button ID="UpdateNotif" Text="text" OnClick="UpdateNotif_Click" CssClass="hide" runat="server" />
+                <asp:Button ID="BtnNotif" Text="text" OnClick="BtnNotif_Click" CssClass="hide" runat="server" />
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <div class="container body-content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <footer>
+                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+            </footer>
+        </div>
+
+    </form>
+    <script type="text/javascript">
+
+        $(function () {
+
+            var logger = $.connection.logHub;
+
+            logger.client.logMessage = function (msg) {
+                console.log("Am intrat")
+                if (msg == "notif_check") {
+                    simulate(document.getElementById('UpdateNotif'), 'click');
+                }
+                if (msg == "All_Users") {
+                    console.log("deeper")
+                    simulate(document.getElementById('Refresh_Comments'), 'click');
+                }
+
+            };
+            logger.client.VidProgress = function (msg) {
+                console.log("Am intrat")
+                $('#ProgressBar').width(msg + '%');
+                $('#ProgressText').text(msg + '%');
+
+            };
+
+            $.connection.hub.start();
+
+
+
+        });
+
+        $(function () {
+            $('[data-toggle=popover].tasks-menu').popover({
+                html: true,
+                content: function () {
+                    console.log('blarg');
+                    myFunction();
+                    simulate(document.getElementById('BtnNotif'), 'click');
+                    return $('#popover_content_wrapper').html();
+                }
+            });
+
+        });
+
+        function myFunction() {
+            var c = document.getElementById("Notif_list");
+            var sub = c.getElementsByTagName("li");
+            for (i = 0; i < sub.length; i++) {
+                sub[i].style.backgroundColor = "white";
+            }
+            var nr = document.getElementById("LoginNav_Notif_Span").innerHTML;
+            if (nr > 15)
+                nr = 15;
+            for (i = 0; i < nr; i++) {
+                sub[i].style.backgroundColor = "#E7E7E7";
+
+            }
+        };
+
+        function badge_update(Number) {
+            var badgeSpan = document.getElementById("Notif_Span");
+            badgeSpan.innerText = Number;
+            console.log('success');
+
+        }
+
+        function simulate(element, eventName) {
+            var options = extend(defaultOptions, arguments[2] || {});
+            var oEvent, eventType = null;
+
+            for (var name in eventMatchers) {
+                if (eventMatchers[name].test(eventName)) { eventType = name; break; }
+            }
+
+            if (!eventType)
+                throw new SyntaxError('Only HTMLEvents and MouseEvents interfaces are supported');
+
+            if (document.createEvent) {
+                oEvent = document.createEvent(eventType);
+                if (eventType == 'HTMLEvents') {
+                    oEvent.initEvent(eventName, options.bubbles, options.cancelable);
+                }
+                else {
+                    oEvent.initMouseEvent(eventName, options.bubbles, options.cancelable, document.defaultView,
+                    options.button, options.pointerX, options.pointerY, options.pointerX, options.pointerY,
+                    options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.button, element);
+                }
+                element.dispatchEvent(oEvent);
+            }
+            else {
+                options.clientX = options.pointerX;
+                options.clientY = options.pointerY;
+                var evt = document.createEventObject();
+                oEvent = extend(evt, options);
+                element.fireEvent('on' + eventName, oEvent);
+            }
+            return element;
+        }
+
+        function extend(destination, source) {
+            for (var property in source)
+                destination[property] = source[property];
+            return destination;
+        }
+
+        var eventMatchers = {
+            'HTMLEvents': /^(?:load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll)$/,
+            'MouseEvents': /^(?:click|dblclick|mouse(?:down|up|over|move|out))$/
+        }
+        var defaultOptions = {
+            pointerX: 0,
+            pointerY: 0,
+            button: 0,
+            ctrlKey: false,
+            altKey: false,
+            shiftKey: false,
+            metaKey: false,
+            bubbles: true,
+            cancelable: true
+        }
+
+    </script>
+</body>
+</html>

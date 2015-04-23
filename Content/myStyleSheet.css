@@ -1,0 +1,176 @@
+﻿body {
+}
+
+#video_container{
+    height:500px;
+    border-color:red;
+    border:2px solid;
+
+}
+
+#video_Player{
+    height:500px;
+}
+
+#vid_up_containre{
+    width:60%;
+    height:300px;
+}
+
+
+.textBoxes{
+    background-color:#E1E1E1 ;
+    border-color:#CCCCCC; 
+    border-style:Double;
+}
+
+#VideoUpload{
+}
+
+
+#menu_button{
+
+}
+
+#NavMenu{
+ position:absolute;
+    width:200px;
+    top:50px;
+    z-index:100;
+}
+
+#AdminMenu{
+ position:absolute;
+    width:200px;
+    top:50px;
+    z-index:0;
+}
+
+
+#AddToDropDown{
+     position:absolute;
+    width:250px;
+    z-index:0;
+}
+
+AddButton{
+     overflow: hidden;
+    text-overflow: ellipsis;
+    height:40px;
+    white-space: nowrap;
+}
+RemoveButton{
+     overflow: hidden;
+    text-overflow: ellipsis;
+    height:40px;
+    white-space: nowrap;
+
+}
+
+#btnRandom{
+ position:absolute;
+    height:20px;
+    top:50px;
+    z-index:101;
+}
+
+#SearchZone{
+    height:30px;
+}
+
+#SearchButton{
+
+}
+
+
+.Menu-guide{
+    height:40px;
+    width:100px;
+}
+
+.Menu-guide :hover{
+    background-color:red;
+    color:red;
+
+}
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+
+#BodyContent{
+    left:120px;
+}
+
+        #Fig_video_Player {
+            display: table;
+            line-height: 0;
+            font-size: 0;
+            background: #000;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        #video_container {
+            position: relative;
+        }
+
+        #Fig_video_Player div, #Fig_video_Player figcaption {
+            display: table-cell;
+            vertical-align: top;
+        }
+
+        /*#video_container video {
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+        }*/
+
+        #Fig_video_Player figcaption {
+            width: 25%;
+        }
+
+            #Fig_video_Player figcaption a {
+                display: block;
+            }
+
+            #Fig_video_Player figcaption a {
+                opacity: .5;
+                transition: 1s opacity;
+            }
+
+                #Fig_video_Player figcaption a img {
+                    width: 100%;
+                    height: auto;
+                }
+
+                #Fig_video_Player figcaption a.currentvid, #Fig_video_Player figcaption a:hover, #Fig_video_Player figcaption a:focus {
+                    opacity: 1;
+                }
+
+        @media (max-width: 700px) {
+            ] #Fig_video_Player figcaption {
+                display: table-row;
+            }
+
+            #video_container {
+                padding-top: 56.25%;
+            }
+
+            #Fig_video_Player figcaption a {
+                display: inline-block;
+                width: 33.33%;
+            }
+        }
+

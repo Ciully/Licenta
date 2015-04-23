@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="Content/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="Scripts/bootstrap.min.js"></script>  
+    <script type="text/javascript">
+        $(function () {
+
+            $('[data-toggle=popover].tasks-menu').popover({
+                html: true,
+                content: function () {
+                    return $('#popover_content_wrapper').html();
+                }
+            });
+
+        });
+    </script>
+    <title></title>
+</head>
+<body>
+
+    <a tabindex="0" class="tasks-menu" role="button" data-toggle="popover" data-placement="bottom" data-trigger="focus">Tasks</a>
+
+    <div id="popover_content_wrapper" style="display:none"><hr />
+    HIDDEN CONTENT</div>
+
+</body>
+</html>
